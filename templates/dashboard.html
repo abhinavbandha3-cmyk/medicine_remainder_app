@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard - Smart Medicine Reminder{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-2">
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-icon bg-icon-blue"><i class="fa-solid fa-pills"></i></div>
+            <div>
+                <div class="stat-value">{{ total_medicines }}</div>
+                <div class="stat-label">Total Medicines</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-icon bg-icon-navy"><i class="fa-solid fa-calendar-day"></i></div>
+            <div>
+                <div class="stat-value">{{ today_count }}</div>
+                <div class="stat-label">Today's Medicines</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-icon bg-icon-amber"><i class="fa-solid fa-hourglass-half"></i></div>
+            <div>
+                <div class="stat-value">{{ upcoming_meds|length }}</div>
+                <div class="stat-label">Upcoming Today</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-icon bg-icon-green"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+                <div class="stat-value">{{ taken_pct }}%</div>
+                <div class="stat-label">Taken Rate</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="glass-card mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="mb-0 fw-bold" style="color:var(--navy-deep)">Medicine Taken Percentage</h6>
+        <span class="badge-soft">{{ taken_pct }}% overall</span>
+    </div>
+    <div class="progress progress-thin">
+        <div class="progress-bar" style="width: {{ taken_pct }}%"></div>
+    </div>
+</div>
+
+<div class="section-title">Quick Actions</div>
+<div class="action-grid">
+    <a href="{{ url_for('add_medicine') }}" class="action-card">
+        <div class="a-icon"><i class="fa-solid fa-pills"></i></div>
+        <div class="a-title">Add Medicine</div>
+        <div class="a-desc">Schedule a new medication</div>
+    </a>
+    <a href="{{ url_for('view_medicines') }}" class="action-card">
+        <div class="a-icon"><i class="fa-solid fa-list-check"></i></div>
+        <div class="a-title">View Medicines</div>
+        <div class="a-desc">Browse, search & manage</div>
+    </a>
+    <a href="{{ url_for('reminder_page') }}" class="action-card">
+        <div class="a-icon"><i class="fa-solid fa-bell"></i></div>
+        <div class="a-title">Reminders</div>
+        <div class="a-desc">See what's due next</div>
+    </a>
+    <a href="{{ url_for('prescription') }}" class="action-card">
+        <div class="a-icon"><i class="fa-solid fa-file-medical"></i></div>
+        <div class="a-title">Upload Prescription</div>
+        <div class="a-desc">Store a scan or photo</div>
+    </a>
+    <a href="{{ url_for('caregiver') }}" class="action-card">
+        <div class="a-icon"><i class="fa-solid fa-envelope-circle-check"></i></div>
+        <div class="a-title">Caregiver Alert</div>
+        <div class="a-desc">Email a loved one</div>
+    </a>
+    <a href="{{ url_for('chatbot') }}" class="action-card">
+        <div class="a-icon"><i class="fa-solid fa-robot"></i></div>
+        <div class="a-title">AI Chatbot</div>
+        <div class="a-desc">Ask about a medicine</div>
+    </a>
+    <a href="{{ url_for('report') }}" class="action-card">
+        <div class="a-icon"><i class="fa-solid fa-chart-column"></i></div>
+        <div class="a-title">Reports</div>
+        <div class="a-desc">Export PDF or CSV</div>
+    </a>
+    <a href="{{ url_for('profile') }}" class="action-card">
+        <div class="a-icon"><i class="fa-solid fa-user-gear"></i></div>
+        <div class="a-title">Profile</div>
+        <div class="a-desc">Account & password</div>
+    </a>
+</div>
+
+<div class="section-title">Upcoming Today</div>
+<div class="glass-card">
+    {% if upcoming_meds %}
+    <div class="table-responsive">
+        <table class="table table-medi mb-0">
+            <thead><tr><th>Medicine</th><th>Dosage</th><th>Time</th><th>Frequency</th></tr></thead>
+            <tbody>
+            {% for m in upcoming_meds %}
+                <tr>
+                    <td class="fw-semibold">{{ m.medicine_name }}</td>
+                    <td>{{ m.dosage or '-' }}</td>
+                    <td><span class="badge-soft">{{ m.time }}</span></td>
+                    <td>{{ m.frequency or '-' }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-center text-muted mb-0 py-3">No more medicines scheduled for today. 🎉</p>
+    {% endif %}
+</div>
+{% endblock %}

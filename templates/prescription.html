@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block title %}Prescriptions{% endblock %}
+{% block page_title %}Upload Prescription{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+    <div class="col-lg-5">
+        <div class="glass-card">
+            <h6 class="fw-bold mb-3" style="color:var(--navy-deep)"><i class="fa-solid fa-file-medical me-2"></i>Upload Prescription</h6>
+            <form method="POST" action="{{ url_for('prescription') }}" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">Choose an image (JPG, JPEG, PNG)</label>
+                    <input type="file" name="prescription_file" id="rxFile" class="form-control" accept=".jpg,.jpeg,.png" required>
+                </div>
+                <img id="rxPreview" class="rx-thumb mb-3 d-none" alt="Preview">
+                <button type="submit" class="btn btn-medi w-100"><i class="fa-solid fa-upload me-2"></i>Upload</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="glass-card">
+            <h6 class="fw-bold mb-3" style="color:var(--navy-deep)">Uploaded Prescriptions</h6>
+            {% if files %}
+            <div class="row g-3">
+                {% for f in files %}
+                <div class="col-6 col-md-4">
+                    <img src="{{ url_for('uploaded_file', filename=f.filename) }}" class="rx-thumb" alt="{{ f.original_name }}">
+                    <div class="small text-muted mt-1 text-truncate">{{ f.original_name }}</div>
+                    <div class="small text-muted">{{ f.uploaded_at.strftime('%d %b %Y, %I:%M %p') }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-center text-muted mb-0 py-4">No prescriptions uploaded yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('rxFile').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('rxPreview');
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove('d-none');
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}Caregiver Alert{% endblock %}
+{% block page_title %}Caregiver Alert{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="max-width: 560px;">
+    <h6 class="fw-bold mb-3" style="color:var(--navy-deep)"><i class="fa-solid fa-envelope-circle-check me-2"></i>Caregiver Email Alert</h6>
+    <p class="text-muted small">Enter a caregiver's email address. We'll save it to your profile and send a test alert now so you know it works.</p>
+    <form method="POST" action="{{ url_for('caregiver') }}">
+        <div class="mb-3">
+            <label class="form-label">Caregiver Email</label>
+            <input type="email" name="caregiver_email" class="form-control" placeholder="caregiver@example.com" value="{{ caregiver_email or '' }}" required>
+        </div>
+        <button type="submit" class="btn btn-medi"><i class="fa-solid fa-paper-plane me-2"></i>Save &amp; Send Test Alert</button>
+    </form>
+    <div class="alert alert-info mt-3 mb-0 small">
+        <i class="fa-solid fa-circle-info me-1"></i>
+        To enable real email delivery, set the <code>MAIL_ADDRESS</code> and <code>MAIL_APP_PASSWORD</code>
+        environment variables (a Gmail App Password) before running the app.
+    </div>
+</div>
+{% endblock %}

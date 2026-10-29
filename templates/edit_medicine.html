@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% block title %}Edit Medicine{% endblock %}
+{% block page_title %}Edit Medicine{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="max-width: 720px;">
+    <h6 class="fw-bold mb-3" style="color:var(--navy-deep)"><i class="fa-solid fa-pen-to-square me-2"></i>Edit Medicine</h6>
+    <form method="POST" action="{{ url_for('edit_medicine', med_id=med.id) }}">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Medicine Name</label>
+                <input type="text" name="medicine_name" class="form-control" value="{{ med.medicine_name }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Dosage</label>
+                <input type="text" name="dosage" class="form-control" value="{{ med.dosage or '' }}">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Time</label>
+                <input type="time" name="time" class="form-control" value="{{ med.time }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Frequency</label>
+                {% set freqs = (med.frequency or '').split(', ') %}
+                <div class="freq-check">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="frequency" value="Morning" id="fmorning" {{ 'checked' if 'Morning' in freqs }}>
+                        <label class="form-check-label" for="fmorning">Morning</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="frequency" value="Afternoon" id="fafternoon" {{ 'checked' if 'Afternoon' in freqs }}>
+                        <label class="form-check-label" for="fafternoon">Afternoon</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="frequency" value="Night" id="fnight" {{ 'checked' if 'Night' in freqs }}>
+                        <label class="form-check-label" for="fnight">Night</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Start Date</label>
+                <input type="date" name="start_date" class="form-control" value="{{ med.start_date.isoformat() if med.start_date else '' }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">End Date</label>
+                <input type="date" name="end_date" class="form-control" value="{{ med.end_date.isoformat() if med.end_date else '' }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Status</label>
+                <select name="status" class="form-select">
+                    <option value="Active" {{ 'selected' if med.status=='Active' }}>Active</option>
+                    <option value="Completed" {{ 'selected' if med.status=='Completed' }}>Completed</option>
+                    <option value="Stopped" {{ 'selected' if med.status=='Stopped' }}>Stopped</option>
+                </select>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Notes</label>
+                <textarea name="notes" class="form-control" rows="3">{{ med.notes or '' }}</textarea>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-medi px-4"><i class="fa-solid fa-floppy-disk me-2"></i>Update Medicine</button>
+            <a href="{{ url_for('view_medicines') }}" class="btn btn-outline-secondary px-4">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

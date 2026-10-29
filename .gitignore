@@ -1,0 +1,29 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# IDE settings
+.idea/
+.vscode/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Secrets and environment variables
+.env
+.env.*
+!.env.example
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploaded files and private records
+uploads/*
+!uploads/.gitkeep
+
+# macOS files
+.DS_Store

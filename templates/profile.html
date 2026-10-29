@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block title %}Profile{% endblock %}
+{% block page_title %}Profile{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="glass-card text-center">
+            <div class="stat-icon bg-icon-blue mx-auto mb-3" style="width:64px;height:64px;font-size:26px;">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <h6 class="fw-bold mb-1" style="color:var(--navy-deep)">{{ user.username }}</h6>
+            <p class="text-muted small mb-3">Member since {{ user.created_at.strftime('%b %Y') }}</p>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm w-100"><i class="fa-solid fa-right-from-bracket me-1"></i>Logout</a>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="glass-card">
+            <h6 class="fw-bold mb-3" style="color:var(--navy-deep)"><i class="fa-solid fa-lock me-2"></i>Change Password</h6>
+            <form method="POST" action="{{ url_for('profile') }}">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" name="current_password" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">New Password</label>
+                        <input type="password" name="new_password" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" name="confirm_password" class="form-control" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-medi mt-4"><i class="fa-solid fa-floppy-disk me-2"></i>Update Password</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block title %}View Medicines{% endblock %}
+{% block page_title %}View Medicines{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="glass-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0" style="color:var(--navy-deep)"><i class="fa-solid fa-list-check me-2"></i>All Medicines</h6>
+        <a href="{{ url_for('add_medicine') }}" class="btn btn-medi btn-sm"><i class="fa-solid fa-plus me-1"></i>Add Medicine</a>
+    </div>
+
+    <div class="table-responsive">
+        <table id="medTable" class="table table-medi mb-0 w-100">
+            <thead>
+                <tr>
+                    <th>Medicine</th>
+                    <th>Dosage</th>
+                    <th>Time</th>
+                    <th>Frequency</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for m in medicines %}
+                <tr>
+                    <td class="fw-semibold">{{ m.medicine_name }}</td>
+                    <td>{{ m.dosage or '-' }}</td>
+                    <td>{{ m.time }}</td>
+                    <td>{{ m.frequency or '-' }}</td>
+                    <td>{{ m.start_date }}</td>
+                    <td>{{ m.end_date or '-' }}</td>
+                    <td>
+                        <span class="badge-status badge-{{ m.status|lower }}">{{ m.status }}</span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('edit_medicine', med_id=m.id) }}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
+                        <form action="{{ url_for('delete_medicine', med_id=m.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete {{ m.medicine_name }} permanently?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('#medTable').DataTable({
+        pageLength: 8,
+        lengthChange: false,
+        order: [[2, 'asc']],
+        language: { search: "", searchPlaceholder: "Search medicines..." }
+    });
+});
+</script>
+{% endblock %}

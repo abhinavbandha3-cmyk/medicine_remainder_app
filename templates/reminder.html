@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block title %}Reminders{% endblock %}
+{% block page_title %}Reminders{% endblock %}
+
+{% block content %}
+<div class="glass-card mb-3">
+    <div class="d-flex align-items-center gap-3">
+        <div class="stat-icon bg-icon-blue"><i class="fa-solid fa-bell"></i></div>
+        <div>
+            <h6 class="fw-bold mb-1" style="color:var(--navy-deep)">Live Reminders</h6>
+            <p class="mb-0 text-muted small">This page checks your schedule every 30 seconds. When a medicine is due, your browser will speak a reminder and show a notification. Allow notifications for the best experience.</p>
+        </div>
+    </div>
+</div>
+
+<div class="glass-card">
+    <h6 class="fw-bold mb-3" style="color:var(--navy-deep)">Today's Schedule</h6>
+    {% if medicines %}
+    <div class="table-responsive">
+        <table class="table table-medi mb-0">
+            <thead><tr><th>Medicine</th><th>Dosage</th><th>Time</th><th>Frequency</th><th>Mark</th></tr></thead>
+            <tbody>
+            {% for m in medicines %}
+                <tr id="row-{{ m.id }}">
+                    <td class="fw-semibold">{{ m.medicine_name }}</td>
+                    <td>{{ m.dosage or '-' }}</td>
+                    <td><span class="badge-soft">{{ m.time }}</span></td>
+                    <td>{{ m.frequency or '-' }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-success" onclick="logTaken({{ m.id }}, this)">
+                            <i class="fa-solid fa-check"></i> Taken
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-center text-muted mb-0 py-3">No active medicines scheduled. <a href="{{ url_for('add_medicine') }}">Add one</a>.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function logTaken(id, btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+    try {
+        await fetch(`/api/medicine/${id}/log`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({status: 'Taken'})
+        });
+        btn.innerHTML = '<i class="fa-solid fa-check-double"></i> Logged';
+        btn.classList.remove('btn-outline-success');
+        btn.classList.add('btn-success', 'text-white');
+    } catch (e) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Taken';
+    }
+}
+</script>
+{% endblock %}

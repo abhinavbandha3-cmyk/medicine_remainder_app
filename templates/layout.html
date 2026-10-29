@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Smart Medicine Reminder{% endblock %}</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+{% block extra_css %}{% endblock %}
+</head>
+<body class="app-body">
+
+{% if session.user_id %}
+<div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon"><i class="fa-solid fa-staff-snake"></i></span>
+            <span class="brand-text">MediCare<span class="brand-accent">Remind</span></span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('dashboard') }}" class="nav-link {{ 'active' if request.endpoint=='dashboard' }}">
+                <i class="fa-solid fa-gauge-high"></i><span>Dashboard</span>
+            </a>
+            <a href="{{ url_for('add_medicine') }}" class="nav-link {{ 'active' if request.endpoint=='add_medicine' }}">
+                <i class="fa-solid fa-pills"></i><span>Add Medicine</span>
+            </a>
+            <a href="{{ url_for('view_medicines') }}" class="nav-link {{ 'active' if request.endpoint in ['view_medicines','edit_medicine'] }}">
+                <i class="fa-solid fa-list-check"></i><span>View Medicines</span>
+            </a>
+            <a href="{{ url_for('reminder_page') }}" class="nav-link {{ 'active' if request.endpoint=='reminder_page' }}">
+                <i class="fa-solid fa-bell"></i><span>Reminders</span>
+            </a>
+            <a href="{{ url_for('prescription') }}" class="nav-link {{ 'active' if request.endpoint=='prescription' }}">
+                <i class="fa-solid fa-file-medical"></i><span>Prescriptions</span>
+            </a>
+            <a href="{{ url_for('caregiver') }}" class="nav-link {{ 'active' if request.endpoint=='caregiver' }}">
+                <i class="fa-solid fa-envelope-circle-check"></i><span>Caregiver Alert</span>
+            </a>
+            <a href="{{ url_for('chatbot') }}" class="nav-link {{ 'active' if request.endpoint=='chatbot' }}">
+                <i class="fa-solid fa-robot"></i><span>AI Chatbot</span>
+            </a>
+            <a href="{{ url_for('report') }}" class="nav-link {{ 'active' if request.endpoint=='report' }}">
+                <i class="fa-solid fa-chart-column"></i><span>Reports</span>
+            </a>
+            <a href="{{ url_for('profile') }}" class="nav-link {{ 'active' if request.endpoint=='profile' }}">
+                <i class="fa-solid fa-user-gear"></i><span>Profile</span>
+            </a>
+        </nav>
+        <a href="{{ url_for('logout') }}" class="logout-link">
+            <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
+        </a>
+    </aside>
+
+    <div class="main-area">
+        <!-- Topbar -->
+        <header class="topbar">
+            <button id="sidebarToggle" class="icon-btn d-lg-none"><i class="fa-solid fa-bars"></i></button>
+            <h1 class="topbar-title">{% block page_title %}Dashboard{% endblock %}</h1>
+            <div class="topbar-actions">
+                <span class="live-clock" id="liveClock"></span>
+                <button id="themeToggle" class="icon-btn" title="Toggle dark mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <div class="topbar-user">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span>{{ session.username }}</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="content-area">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-stack">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category=='danger' else category }} alert-dismissible fade show glass-alert" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</div>
+{% else %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-stack flash-stack-auth">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category=='danger' else category }} alert-dismissible fade show glass-alert" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    {% block auth_content %}{% endblock %}
+{% endif %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

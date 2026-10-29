@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Login - Smart Medicine Reminder{% endblock %}
+{% block auth_content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-logo"><i class="fa-solid fa-staff-snake"></i></div>
+        <div class="auth-title">Smart Medicine Reminder</div>
+        <div class="auth-subtitle">Sign in to manage your medication schedule</div>
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter your username" required autofocus>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                    <label class="form-check-label" for="remember">Remember me</label>
+                </div>
+                <a href="{{ url_for('forgot_password') }}" class="small">Forgot Password?</a>
+            </div>
+            <button type="submit" class="btn btn-medi w-100">Login</button>
+        </form>
+
+        <div class="auth-footer-note">
+            Don't have an account? <a href="{{ url_for('register') }}">Create one</a>
+            <br>
+            <span style="opacity:.7">Demo login: admin / admin123</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
